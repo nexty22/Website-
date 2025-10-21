@@ -22,4 +22,56 @@ function closeModal(){modal.classList.remove('show');}
 // Particles
 const canvas=document.getElementById('particles');
 const ctx=canvas.getContext('2d');
-canvas.width=window.innerWidth; canvas.height=
+canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+let particles=[];
+for(let i=0;i<60;i++){
+  particles.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    size:Math.random()*2+1,
+    speedX:(Math.random()-0.5)*0.5,
+    speedY:(Math.random()-0.5)*0.5
+  });
+}
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(let p of particles){
+    p.x+=p.speedX;
+    p.y+=p.speedY;
+    if(p.x>canvas.width||p.x<0)p.speedX*=-1;
+    if(p.y>canvas.height||p.y<0)p.speedY*=-1;
+    ctx.fillStyle='rgba(123,47,247,0.7)';
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    ctx.fill();
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+
+// Start Experience
+const startBtn=document.getElementById('startBtn');
+const musicToggle=document.getElementById('musicToggle');
+const music=document.getElementById('bgMusic');
+
+startBtn.addEventListener('click',()=>{
+  document.getElementById('startExperienceWrapper').style.display='none';
+  musicToggle.style.display='inline-block';
+});
+
+// Music Play/Pause
+musicToggle.addEventListener('click',()=>{
+  if(music.paused){
+    music.play();
+    musicToggle.innerText='⏸️ Pause Music';
+  } else {
+    music.pause();
+    musicToggle.innerText='▶️ Play Music';
+  }
+});
+
+// Adjust canvas on resize
+window.addEventListener('resize',()=>{
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+});
